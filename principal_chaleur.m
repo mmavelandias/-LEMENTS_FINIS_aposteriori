@@ -47,27 +47,36 @@ for l=1:Nbtri
   S2=Coorneu(Numtri(l,2),:);
   S3=Coorneu(Numtri(l,3),:);
 
-  %% A COMPLETER
+%%COMPLETADO AQUI
+
+  II  = Numtri(l,:);
+  Mel = matM_elem(S1, S2, S3);
+  Kel = matK_elem(S1, S2, S3, Reftri(l));
+  MM(II,II) = MM(II,II) + Mel;
+  KK(II,II) = KK(II,II) + Kel;
+
 end % for l
 
 AA = alpha*MM + KK;
 
-
 %% Calcul du second membre L
 %% -------------------------
-LL = 0; %% A COMPLETER
-
+LL = 0; 
+%%COMPLETADO AQUI
+FF = zeros(Nbpt,1);
+for i = 1:Nbpt
+    FF(i) = f(Coorneu(i,1), Coorneu(i,2));
+end
+LL = MM*FF;
 
 %% inversion
-%% ----------
+[tilde_AA, tilde_LL] = elimine(AA, LL, Refneu);
 UU = tilde_AA\tilde_LL;
-TT = 0; %% A COMPLETER
-
+TT = UU + T_Gamma; %% A COMPLETER
 
 %% visualisation
 %% -------------
 figure(1); affiche(TT, Numtri, Coorneu, sprintf('Uh - %s', nom_maillage));
-
 
 %% Calcul de grad(u_h) par triangle
 %% --------------------------------
@@ -85,7 +94,6 @@ for l=1:Nbtri
   grad_uh(l,:) = 0; %% A COMPLETER
 end
 
-
 %% Calcul de sigma_h comme une moyenne de -grad(u_h) par patch
 %% -----------------------------------------------------------
 Sigma = zeros(Nbpt,2);
@@ -94,7 +102,6 @@ Sigma(:,2) = moyenne_par_patch(-grad_uh(:,2), Numtri, Coorneu);
 
 figure(2); affiche(Sigma(:,1), Numtri, Coorneu, 'sigma_x');
 figure(3); affiche(Sigma(:,2), Numtri, Coorneu, 'sigma_y');
-
 
 %% Estimateur d'erreur
 %% -------------------
@@ -148,7 +155,6 @@ Eta_tot = sqrt(Eta_f2) + 2*sqrt(2)/pi * sqrt(Eta_r2)
 Eta_av = moyenne_par_patch(Eta, Numtri, Coorneu);
 figure(4); affiche(Eta_av, Numtri, Coorneu, 'Eta');
 
-
 %% validation
 %% ----------
 if strcmp(validation,'oui')
@@ -175,7 +181,6 @@ if strcmp(validation,'oui')
   %% Calcul de l erreur en semi-norme H1 sur u_h
   err_u_semih1 = 0   %% A COMPLETER
 
-
   %% Erreur sur sigma
   EEx = Sigma(:,1) - Sigma_ref(:,1);
   EEy = Sigma(:,2) - Sigma_ref(:,2);
@@ -197,7 +202,6 @@ if strcmp(raffinement, 'oui')
   %%   gmsh -bgm size.pos geomCarre.geo
   write_field('size.pos', 'Mesh size', h, Numtri, Coorneu);
 end
-
 
 %% Enregistrement des résultats de référence (si maillage suffisamment raffiné)
 if strcmp(reference, 'oui')

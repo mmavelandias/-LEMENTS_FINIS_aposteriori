@@ -12,7 +12,7 @@ function val = f(x,y)
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
   %% Validation (Question 8)
-  val = 0 ; %% A COMPLETER
+  val = (1 + 5*pi^2) * sin(pi*x) .* sin(2*pi*y); ; %% A COMPLETER
 
   %% Résolution numérique (Question 11)
   %% val = 290 + 50*(abs(x-1)<0.3) .* (abs(y-1)<0.2);
